@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import WeatherCard from "./WeatherCard";
 import "./styles.css";
+import { Analytics } from '@vercel/analytics/react';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -80,6 +81,7 @@ export default function App() {
   return (
     <div className={`app ${darkMode ? "dark" : ""}`}>
       <h1>Weather App</h1>
+      {/* CREDIT */}
       <p className="credit">MBB</p>
       {/* DARK MODE */}
       <button onClick={() => setDarkMode(!darkMode)}>
@@ -113,7 +115,8 @@ export default function App() {
 
       {weather && <WeatherCard data={weather} />}
 
-      {/* CREDIT */}
+      {/* ... */}
+      <Analytics />
     </div>
   );
 }
