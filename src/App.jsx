@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import WeatherCard from "./WeatherCard";
 import "./styles.css";
 
-const API_KEY = "3ccb53608cd757c472fb62e3cdb4157b";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 export default function App() {
   const [city, setCity] = useState("");
