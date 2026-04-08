@@ -13,7 +13,7 @@ body {
   display: flex;
   justify-content: center;
 
-  padding: 20px; /* desktop */
+  padding: 20px;
   overflow-x: hidden;
 }
 
@@ -25,7 +25,6 @@ body {
   padding: 16px;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  transition: 0.3s;
 
   display: flex;
   flex-direction: column;
@@ -46,7 +45,7 @@ form {
 
 input {
   flex: 1;
-  min-width: 0; /* 🔥 penting */
+  min-width: 0; /* 🔥 anti overflow */
   padding: 8px;
   border-radius: 10px;
   border: 1px solid #ddd;
@@ -76,12 +75,26 @@ button:hover {
   text-align: center;
   padding: 20px;
   border-radius: 14px;
-  background: #f9fafb;
+  background: #dbeafe;
+
+  max-width: 100%;
+  overflow: hidden;
 }
 
+.weather-card img {
+  width: 80px;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* TEXT */
 .temp {
   font-size: 42px;
   font-weight: bold;
+}
+
+.weather-card p {
+  word-break: break-word;
 }
 
 /* HISTORY */
@@ -111,12 +124,17 @@ button:hover {
 
 .forecast-item {
   text-align: center;
-  background: #f3f4f6;
+  background: #dbeafe;
   padding: 10px;
   border-radius: 10px;
 
   min-width: 100px;
   flex: 0 0 auto;
+}
+
+.forecast-item img {
+  width: 50px;
+  margin: 0 auto;
 }
 
 /* DARK MODE */
@@ -131,15 +149,16 @@ button:hover {
 }
 
 .app.dark .weather-card {
-  background: #374151;
+  background: #4c51bf;
 }
 
 .app.dark button {
-  background: #4f46e5;
+  background: #dbeafe;
+  color: black;
 }
 
 .app.dark .forecast-item {
-  background: #374151;
+  background: #4c51bf;
 }
 
 /* CREDIT */
@@ -150,10 +169,10 @@ button:hover {
   opacity: 0.5;
 }
 
-/* 📱 MOBILE */
+/* MOBILE */
 @media (max-width: 768px) {
   body {
-    padding: 10px; /* 🔥 fix utama biar tidak kepotong */
+    padding: 10px; /* 🔥 penting */
   }
 
   .app {
