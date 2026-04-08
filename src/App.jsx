@@ -52,6 +52,13 @@ export default function App() {
       } else {
         setWeather(data);
         setForecast(forecastData.list);
+
+        setHistory((prev) => {
+          const cityName = data.name;
+
+          const filtered = prev.filter((item) => item !== cityName);
+          return [cityName, ...filtered].slice(0, 5);
+        });
       }
 
     } catch {
@@ -122,13 +129,15 @@ export default function App() {
       </button>
 
       {/* HISTORY */}
-      <div className="history">
-        {history.map((item, i) => (
-          <button key={i} onClick={() => fetchWeather(item)}>
-            {item}
-          </button>
-        ))}
-      </div>
+      {history.length > 0 && (
+        <div className="history">
+          {history.map((item, i) => (
+            <button key={i} onClick={() => fetchWeather(item)}>
+              {item}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
