@@ -107,3 +107,21 @@ button:hover {
   margin-top: -8px;
   margin-bottom: 20px;
 }
+
+.forecast {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.forecast-item {
+  text-align: center;
+  background: #f3f4f6;
+  padding: 10px;
+  border-radius: 10px;
+  width: 60px;
+}
+
+.app.dark .forecast-item {
+  background: #374151;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import WeatherCard from "./WeatherCard";
 import "./styles.css";
+import Forecast from "./Forecast";
 import { Analytics } from '@vercel/analytics/react';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -12,6 +13,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
+  const [forecast, setForecast] = useState([]);
 
   // Load history dari localStorage
   useEffect(() => {
@@ -31,28 +33,46 @@ export default function App() {
     setError("");
 
     try {
+      // CURRENT WEATHER
       const res = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}&units=metric`
       );
       const data = await res.json();
 
+      // FORECAST
+      const resForecast = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${query}&appid=${API_KEY}&units=metric`
+      );
+      const forecastData = await resForecast.json();
+
       if (data.cod === "404") {
         setError("Kota tidak ditemukan");
         setWeather(null);
+        setForecast([]);
       } else {
         setWeather(data);
-
-        // simpan ke history (hindari duplikat)
-        setHistory(prev => {
-          const updated = [query, ...prev.filter(c => c !== query)];
-          return updated.slice(0, 5);
-        });
+        setForecast(forecastData.list);
       }
+
     } catch {
       setError("Terjadi error");
     }
 
     setLoading(false);
+  }
+
+  function getDailyForecast(list) {
+    const daily = {};
+
+    list.forEach(item => {
+      const date = item.dt_txt.split(" ")[0];
+
+      if (!daily[date]) {
+        daily[date] = item;
+      }
+    });
+
+    return Object.values(daily).slice(0, 5);
   }
 
   function handleSubmit(e) {
@@ -114,6 +134,10 @@ export default function App() {
       {error && <p className="error">{error}</p>}
 
       {weather && <WeatherCard data={weather} />}
+
+      {forecast.length > 0 && (
+        <Forecast data={getDailyForecast(forecast)} />
+      )}
 
       {/* ... */}
       <Analytics />
