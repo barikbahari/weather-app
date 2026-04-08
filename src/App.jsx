@@ -191,13 +191,15 @@ export default function App() {
       )}
 
       {weather && (
-        <div ref={weatherRef}>
+        <div ref={weatherRef} className="fade-in">
           <WeatherCard data={weather} />
         </div>
       )}
 
       {forecast.length > 0 && (
-        <Forecast data={getDailyForecast(forecast)} />
+        <div className="fade-in-delay">
+          <Forecast data={getDailyForecast(forecast)} />
+        </div>
       )}
 
       {/* ... */}
