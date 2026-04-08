@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import WeatherCard from "./WeatherCard";
 import "./styles.css";
 import Forecast from "./Forecast";
@@ -15,6 +15,8 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [forecast, setForecast] = useState([]);
   const [lastCity, setLastCity] = useState("");
+
+  const weatherRef = useRef(null);
 
   // Load history dari localStorage
   useEffect(() => {
@@ -35,11 +37,21 @@ export default function App() {
   }, [weather]);
 
   useEffect(() => {
-  const last = localStorage.getItem("lastCity");
-  if (last) {
-    fetchWeather(last);
-  }
-}, []);
+    const last = localStorage.getItem("lastCity");
+    if (last) {
+      fetchWeather(last);
+    }
+  }, []);
+
+  // Scroll Effect
+  useEffect(() => {
+    if (weather && weatherRef.current) {
+      weatherRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  }, [weather]);
 
   async function fetchWeather(query) {
     if (!query) return;
@@ -67,11 +79,6 @@ export default function App() {
       } else {
         setWeather(data);
         setForecast(forecastData.list);
-
-        window.scrollTo({
-          top: 300,
-          behavior: "smooth"
-        });
 
         setHistory((prev) => {
           const cityName = data.name;
@@ -183,7 +190,11 @@ export default function App() {
         </div>
       )}
 
-      {weather && <WeatherCard data={weather} />}
+      {weather && (
+        <div ref={weatherRef}>
+          <WeatherCard data={weather} />
+        </div>
+      )}
 
       {forecast.length > 0 && (
         <Forecast data={getDailyForecast(forecast)} />
