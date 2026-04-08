@@ -1,4 +1,7 @@
-* {
+/* RESET */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -6,12 +9,15 @@ body {
   margin: 0;
   font-family: Inter, Arial, sans-serif;
   background: #eef2f7;
+
   display: flex;
   justify-content: center;
-  padding: 40px;
+
+  padding: 20px; /* desktop */
   overflow-x: hidden;
 }
 
+/* CONTAINER */
 .app {
   width: 100%;
   max-width: 600px;
@@ -20,33 +26,37 @@ body {
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   transition: 0.3s;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
-  /*margin: auto;*/
 }
 
+/* TITLE */
 h1 {
   text-align: center;
-  margin-bottom: 20px;
 }
 
 /* FORM */
 form {
   display: flex;
   gap: 8px;
-  margin-bottom: 12px;
+  width: 100%;
 }
 
 input {
   flex: 1;
+  min-width: 0; /* 🔥 penting */
   padding: 8px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  width: 100%;
-  min-width: 0;
 }
 
+form button {
+  flex-shrink: 0;
+}
+
+/* BUTTON */
 button {
   padding: 8px 12px;
   border: none;
@@ -55,7 +65,6 @@ button {
   color: white;
   cursor: pointer;
   transition: 0.2s;
-  margin-top: 6px;
 }
 
 button:hover {
@@ -65,7 +74,6 @@ button:hover {
 /* WEATHER CARD */
 .weather-card {
   text-align: center;
-  margin-top: 20px;
   padding: 20px;
   border-radius: 14px;
   background: #f9fafb;
@@ -78,10 +86,10 @@ button:hover {
 
 /* HISTORY */
 .history {
-  margin-top: 12px 0;
+  margin: 12px 0;
   display: flex;
   gap: 8px;
-  /*flex-wrap: wrap;*/
+  overflow-x: auto;
 }
 
 .history button {
@@ -89,19 +97,26 @@ button:hover {
   color: black;
   font-size: 12px;
   padding: 6px 10px;
+
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .history {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 5px;
-  }
+/* FORECAST */
+.forecast {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
 
-  .history button {
-    flex: 0 0 auto;
-    white-space: nowrap;
-  }
+.forecast-item {
+  text-align: center;
+  background: #f3f4f6;
+  padding: 10px;
+  border-radius: 10px;
+
+  min-width: 100px;
+  flex: 0 0 auto;
 }
 
 /* DARK MODE */
@@ -121,7 +136,10 @@ button:hover {
 
 .app.dark button {
   background: #4f46e5;
-  color: white;
+}
+
+.app.dark .forecast-item {
+  background: #374151;
 }
 
 /* CREDIT */
@@ -130,44 +148,16 @@ button:hover {
   font-size: 11px;
   letter-spacing: 2px;
   opacity: 0.5;
-  margin-top: -8px;
-  margin-bottom: 20px;
 }
 
-.forecast {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  gap: 10px;
-}
-
+/* 📱 MOBILE */
 @media (max-width: 768px) {
-  .forecast {
-    overflow-x: auto;
+  body {
+    padding: 10px; /* 🔥 fix utama biar tidak kepotong */
   }
 
-  .forecast > div {
-    min-width: 120px;
-  }
-}
-
-.forecast-item {
-  text-align: center;
-  background: #f3f4f6;
-  padding: 10px;
-  border-radius: 10px;
-  width: 60px;
-}
-
-.app.dark .forecast-item {
-  background: #374151;
-}
-
-/* RESPONSIVE MOBILE */
-
-@media (max-width: 768px) {
   .app {
-    padding: 15px;
+    padding: 14px;
   }
 
   h1 {
@@ -181,12 +171,4 @@ button:hover {
   form button {
     width: 100%;
   }
-
-  input {
-    width: 100%;
-  }
-}
-
-button:hover {
-  opacity: 0.8;
 }
