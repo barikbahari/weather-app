@@ -211,3 +211,46 @@ button:hover {
     width: 100%;
   }
 }
+
+.skeleton-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.3);
+}
+
+.skeleton {
+  background: #e5e7eb;
+  border-radius: 8px;
+  margin: 10px auto;
+  animation: shimmer 1.2s infinite;
+}
+
+.skeleton.title {
+  width: 60%;
+  height: 20px;
+}
+
+.skeleton.icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.skeleton.temp {
+  width: 40%;
+  height: 30px;
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.error-box {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}

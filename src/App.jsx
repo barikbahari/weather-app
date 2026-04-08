@@ -14,6 +14,7 @@ export default function App() {
   const [history, setHistory] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const [forecast, setForecast] = useState([]);
+  const [lastCity, setLastCity] = useState("");
 
   // Load history dari localStorage
   useEffect(() => {
@@ -25,6 +26,20 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("history", JSON.stringify(history));
   }, [history]);
+
+  // Auto Load Last City
+  useEffect(() => {
+    if (weather) {
+      localStorage.setItem("lastCity", weather.name);
+    }
+  }, [weather]);
+
+  useEffect(() => {
+  const last = localStorage.getItem("lastCity");
+  if (last) {
+    fetchWeather(last);
+  }
+}, []);
 
   async function fetchWeather(query) {
     if (!query) return;
@@ -52,6 +67,11 @@ export default function App() {
       } else {
         setWeather(data);
         setForecast(forecastData.list);
+
+        window.scrollTo({
+          top: 300,
+          behavior: "smooth"
+        });
 
         setHistory((prev) => {
           const cityName = data.name;
@@ -117,11 +137,13 @@ export default function App() {
 
       <form onSubmit={handleSubmit}>
         <input
-          placeholder="Masukkan kota..."
+          placeholder="Cari kota (contoh: Bandung)"
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
-        <button type="submit">Cari</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Cari"}
+        </button>
       </form>
 
       <button onClick={detectLocation}>
@@ -132,15 +154,34 @@ export default function App() {
       {history.length > 0 && (
         <div className="history">
           {history.map((item, i) => (
-            <button key={i} onClick={() => fetchWeather(item)}>
+            <button key={i} onClick={() => {
+                setCity(item);
+                fetchWeather(item);
+              }}>
               {item}
             </button>
           ))}
         </div>
       )}
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
+      {!weather && !loading && (
+        <p style={{ textAlign: "center", opacity: 0.6 }}>
+          Cari kota untuk melihat cuaca 🌤️
+        </p>
+      )}
+
+      {loading && (
+        <div className="skeleton-card">
+          <div className="skeleton title"></div>
+          <div className="skeleton icon"></div>
+          <div className="skeleton temp"></div>
+        </div>
+      )}
+      {error && (
+        <div className="error-box">
+          ⚠️ {error}
+        </div>
+      )}
 
       {weather && <WeatherCard data={weather} />}
 
