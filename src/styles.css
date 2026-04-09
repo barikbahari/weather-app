@@ -275,3 +275,8 @@ button:hover {
   animation-delay: 0.15s;
   animation-fill-mode: both;
 }
+
+.last-update {
+  font-size: 12px;
+  margin: 0;
+}

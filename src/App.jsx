@@ -53,6 +53,17 @@ export default function App() {
     }
   }, [weather]);
 
+  // Auto Refresh
+  useEffect(() => {
+    fetchWeather();
+
+    const interval = setInterval(() => {
+      fetchWeather();
+    }, 600000); // 10 menit
+
+    return () => clearInterval(interval);
+  }, []);
+
   async function fetchWeather(query) {
     if (!query) return;
 
@@ -116,18 +127,33 @@ export default function App() {
   }
 
   // 🌍 Auto detect lokasi
-  function detectLocation() {
+  async function detectLocation() {
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const { latitude, longitude } = pos.coords;
 
       setLoading(true);
+      setError("");
 
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
-      );
+      try {
+        // CURRENT WEATHER
+        const res = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+        );
+        const data = await res.json();
 
-      const data = await res.json();
-      setWeather(data);
+        // 🔥 TAMBAHAN: FORECAST
+        const resForecast = await fetch(
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+        );
+        const forecastData = await resForecast.json();
+
+        setWeather(data);
+        setForecast(forecastData.list);
+
+      } catch {
+        setError("Gagal mengambil lokasi");
+      }
+
       setLoading(false);
     });
   }
@@ -189,6 +215,8 @@ export default function App() {
           ⚠️ {error}
         </div>
       )}
+
+      <p className="last-update">Last update: {new Date().toLocaleTimeString()}</p>
 
       {weather && (
         <div ref={weatherRef} className="fade-in">
