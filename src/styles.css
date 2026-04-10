@@ -159,7 +159,7 @@ button:hover {
 
 /* DARK MODE */
 .app.dark {
-  background: rgba(31, 41, 55, 0.7);
+  background: #1f2937 !important;
   color: white;
 }
 
@@ -279,4 +279,43 @@ button:hover {
 .last-update {
   font-size: 12px;
   margin: 0;
+}
+
+/* DEFAULT */
+.app.default {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+/* ☀️ SUNNY */
+.app.sunny {
+  background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+}
+
+/* ☁️ CLOUDY */
+.app.cloudy {
+  background: linear-gradient(135deg, #d7d2cc, #304352);
+  color: white;
+}
+
+/* 🌧️ RAINY */
+.app.rainy {
+  background: linear-gradient(135deg, #4b79a1, #283e51);
+  color: white;
+}
+
+/* ⛈️ STORM */
+.app.storm {
+  background: linear-gradient(135deg, #232526, #414345);
+  color: white;
+}
+
+/* ❄️ SNOW */
+.app.snow {
+  background: linear-gradient(135deg, #e6dada, #274046);
+}
+
+.weather-card,
+.forecast-item {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
 }

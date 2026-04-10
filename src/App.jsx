@@ -158,8 +158,30 @@ export default function App() {
     });
   }
 
+  function getBackgroundClass(weather) {
+    if (!weather) return "default";
+
+    const main = weather.weather[0].main;
+
+    switch (main) {
+      case "Clear":
+        return "sunny";
+      case "Clouds":
+        return "cloudy";
+      case "Rain":
+      case "Drizzle":
+        return "rainy";
+      case "Thunderstorm":
+        return "storm";
+      case "Snow":
+        return "snow";
+      default:
+        return "default";
+    }
+  }
+
   return (
-    <div className={`app ${darkMode ? "dark" : ""}`}>
+    <div className={`app ${darkMode ? "dark" : ""} ${getBackgroundClass(weather)}`}>
       <h1>Weather App</h1>
       {/* CREDIT */}
       <p className="credit">MBB</p>
