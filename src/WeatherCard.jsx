@@ -1,4 +1,4 @@
-export default function WeatherCard({ data }) {
+export default function WeatherCard({ data, isDay, isFav, onToggleFav, unit }) {
   const { name, main, weather } = data;
 
   const icon = weather[0].icon;
@@ -6,12 +6,21 @@ export default function WeatherCard({ data }) {
 
   return (
     <div className="weather-card">
-      <h2>{name}</h2>
+       <h2>
+        {name}
+        <button onClick={onToggleFav} style={{ marginLeft: 10 }}>
+          {isFav ? "⭐" : "☆"}
+        </button>
+      </h2>
+
+      <p>
+        {isDay ? "🌞 Day" : "🌙 Night"}
+      </p>
 
       <img src={iconUrl} alt="weather icon" />
 
       <div className="temp">
-        {Math.round(main.temp)}°C
+        {Math.round(main.temp)}°{unit === "metric" ? "C" : "F"}
       </div>
 
       <p>{weather[0].main}</p>

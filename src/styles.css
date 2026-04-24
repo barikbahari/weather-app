@@ -446,3 +446,41 @@ button:hover {
     transform: translateY(100%);
   }
 }
+
+/* DAY */
+.app.day {
+  filter: brightness(1);
+}
+
+/* NIGHT */
+.app.night {
+  filter: brightness(0.75);
+}
+
+/* Optional: tint warna */
+.app.night.sunny {
+  color: white;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+.app.night.cloudy,
+.app.night.rainy,
+.app.night.storm {
+  background: linear-gradient(135deg, #141e30, #243b55);
+  color: white;
+}
+
+.favorites {
+  margin: 10px 0;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.favorites button {
+  background: #facc15; /* kuning */
+  color: black;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+}

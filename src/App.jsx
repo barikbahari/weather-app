@@ -15,6 +15,8 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [forecast, setForecast] = useState([]);
   const [lastCity, setLastCity] = useState("");
+  const [favorites, setFavorites] = useState([]);
+  const [unit, setUnit] = useState("metric");
 
   const weatherRef = useRef(null);
 
@@ -64,6 +66,28 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Favorite City
+  useEffect(() => {
+    const savedFav = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(savedFav);
+  }, []);
+
+  // Konversi
+  useEffect(() => {
+    const savedUnit = localStorage.getItem("unit");
+    if (savedUnit) setUnit(savedUnit);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("unit", unit);
+  }, [unit]);
+
+  useEffect(() => {
+    if (weather) {
+      fetchWeather(weather.name);
+    }
+  }, [unit]);
+
   async function fetchWeather(query) {
     if (!query) return;
 
@@ -73,13 +97,13 @@ export default function App() {
     try {
       // CURRENT WEATHER
       const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}&units=${unit}`
       );
       const data = await res.json();
 
       // FORECAST
       const resForecast = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${query}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${query}&appid=${API_KEY}&units=${unit}`
       );
       const forecastData = await resForecast.json();
 
@@ -137,13 +161,13 @@ export default function App() {
       try {
         // CURRENT WEATHER
         const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=${unit}`
         );
         const data = await res.json();
 
         // 🔥 TAMBAHAN: FORECAST
         const resForecast = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=${unit}`
         );
         const forecastData = await resForecast.json();
 
@@ -180,14 +204,42 @@ export default function App() {
     }
   }
 
+  function isDaytime(weather) {
+    if (!weather) return true;
+
+    const now = Date.now() / 1000; // convert ke detik
+    const sunrise = weather.sys.sunrise;
+    const sunset = weather.sys.sunset;
+
+    return now >= sunrise && now < sunset;
+  }
+
+  function toggleFavorite(cityName) {
+    setFavorites((prev) => {
+      if (prev.includes(cityName)) {
+        return prev.filter((c) => c !== cityName);
+      } else {
+        return [cityName, ...prev];
+      }
+    });
+  }
+
   return (
-    <div className={`app ${darkMode ? "dark" : ""} ${getBackgroundClass(weather)}`}>
+    <div className={`app 
+      ${darkMode ? "dark" : ""} 
+      ${getBackgroundClass(weather)} 
+      ${isDaytime(weather) ? "day" : "night"}
+    `}>
       <h1>Weather App</h1>
       {/* CREDIT */}
       <p className="credit">MBB</p>
       {/* DARK MODE */}
       <button onClick={() => setDarkMode(!darkMode)}>
         {darkMode ? "Light Mode" : "Dark Mode"}
+      </button>
+
+      <button onClick={() => setUnit(unit === "metric" ? "imperial" : "metric")}>
+        {unit === "metric" ? "°C" : "°F"}
       </button>
 
       <form onSubmit={handleSubmit}>
@@ -204,6 +256,17 @@ export default function App() {
       <button onClick={detectLocation}>
         Gunakan Lokasi Saya
       </button>
+
+      {favorites.length > 0 && (
+        <div className="favorites">
+          <p>⭐ Favorite:</p>
+          {favorites.map((city, i) => (
+            <button key={i} onClick={() => fetchWeather(city)}>
+              {city}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* HISTORY */}
       {history.length > 0 && (
@@ -242,7 +305,13 @@ export default function App() {
 
       {weather && (
         <div ref={weatherRef} className="fade-in">
-          <WeatherCard data={weather} />
+          <WeatherCard
+            data={weather}
+            isDay={isDaytime(weather)}
+            isFav={favorites.includes(weather.name)}
+            onToggleFav={() => toggleFavorite(weather.name)}
+            unit={unit}
+          />
         </div>
       )}
 
