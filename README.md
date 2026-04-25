@@ -1,16 +1,121 @@
-# React + Vite
+# Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern and responsive weather application built with React.
+This app provides real-time weather data, 5-day forecasts, and a clean user experience with dynamic UI.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Live Demo
 
-## React Compiler
+https://weather-app-murex-chi-97.vercel.app/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* Search weather by city
+* Auto-detect current location
+* Temperature unit toggle (°C / °F)
+* Favorite cities
+* Search history (max 5 cities)
+* 5-day weather forecast
+* Automatic day / night mode
+* Dynamic background based on weather
+* Smooth animations & transitions
+* Fully responsive (mobile & desktop)
+
+---
+
+## Tech Stack
+
+* React (Vite)
+* CSS (Custom styling)
+* OpenWeather API
+* Vercel (Deployment)
+
+---
+
+## Project Structure
+
+```
+src/
+│
+├── components/
+│   ├── WeatherCard.jsx
+│   └── Forecast.jsx
+│
+├── hooks/
+│   └── useWeather.js
+│
+├── styles/
+│   └── styles.css
+│
+└── App.jsx
+```
+
+---
+
+## Installation
+
+1. Clone the repository
+
+```
+git clone https://github.com/barikbahari/weather-app/
+```
+
+2. Install dependencies
+
+```
+npm install
+```
+
+3. Create `.env` file
+
+```
+VITE_API_KEY=your_api_key_here
+```
+
+4. Run the app
+
+```
+npm run dev
+```
+
+---
+
+## Screenshots
+
+### Desktop
+
+![Desktop](image-1.png)
+
+### Mobile
+
+![Mobile](Mobile-1.jpeg)
+
+---
+
+## Key Highlights
+
+* Clean separation using custom React hooks (`useWeather`)
+* Optimized UX with smooth scrolling & animations
+* Persistent data using localStorage
+* Dynamic UI based on real-time weather conditions
+
+---
+
+## Future Improvements
+
+* Air quality index integration
+* Weather alerts
+* PWA support (offline mode)
+* Multi-language support
+
+---
+
+## Author
+
+Mohamad Barik Bahari
+IoT Engineer | Frontend Enthusiast
+
+---

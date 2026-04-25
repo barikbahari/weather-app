@@ -3,20 +3,26 @@ import WeatherCard from "./WeatherCard";
 import "./styles.css";
 import Forecast from "./Forecast";
 import { Analytics } from '@vercel/analytics/react';
+import useWeather from "./hooks/useWeather";
 
-const API_KEY = import.meta.env.VITE_API_KEY;
+//const API_KEY = import.meta.env.VITE_API_KEY;
 
 export default function App() {
   const [city, setCity] = useState("");
-  const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-  const [forecast, setForecast] = useState([]);
   const [lastCity, setLastCity] = useState("");
   const [favorites, setFavorites] = useState([]);
-  const [unit, setUnit] = useState("metric");
+  const {
+    weather,
+    forecast,
+    loading,
+    error,
+    unit,
+    setUnit,
+    fetchWeather,
+    detectLocation
+  } = useWeather();
 
   const weatherRef = useRef(null);
 
@@ -30,6 +36,15 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("history", JSON.stringify(history));
   }, [history]);
+
+  useEffect(() => {
+    if (weather && weather.name) {
+      setHistory((prev) => {
+        const filtered = prev.filter((c) => c !== weather.name);
+        return [weather.name, ...filtered].slice(0, 5);
+      });
+    }
+  }, [weather]);
 
   // Auto Load Last City
   useEffect(() => {
@@ -72,64 +87,6 @@ export default function App() {
     setFavorites(savedFav);
   }, []);
 
-  // Konversi
-  useEffect(() => {
-    const savedUnit = localStorage.getItem("unit");
-    if (savedUnit) setUnit(savedUnit);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("unit", unit);
-  }, [unit]);
-
-  useEffect(() => {
-    if (weather) {
-      fetchWeather(weather.name);
-    }
-  }, [unit]);
-
-  async function fetchWeather(query) {
-    if (!query) return;
-
-    setLoading(true);
-    setError("");
-
-    try {
-      // CURRENT WEATHER
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}&units=${unit}`
-      );
-      const data = await res.json();
-
-      // FORECAST
-      const resForecast = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${query}&appid=${API_KEY}&units=${unit}`
-      );
-      const forecastData = await resForecast.json();
-
-      if (data.cod === "404") {
-        setError("Kota tidak ditemukan");
-        setWeather(null);
-        setForecast([]);
-      } else {
-        setWeather(data);
-        setForecast(forecastData.list);
-
-        setHistory((prev) => {
-          const cityName = data.name;
-
-          const filtered = prev.filter((item) => item !== cityName);
-          return [cityName, ...filtered].slice(0, 5);
-        });
-      }
-
-    } catch {
-      setError("Terjadi error");
-    }
-
-    setLoading(false);
-  }
-
   function getDailyForecast(list) {
     const daily = {};
 
@@ -148,38 +105,6 @@ export default function App() {
     e.preventDefault();
     fetchWeather(city);
     setCity("");
-  }
-
-  // 🌍 Auto detect lokasi
-  async function detectLocation() {
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const { latitude, longitude } = pos.coords;
-
-      setLoading(true);
-      setError("");
-
-      try {
-        // CURRENT WEATHER
-        const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=${unit}`
-        );
-        const data = await res.json();
-
-        // 🔥 TAMBAHAN: FORECAST
-        const resForecast = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=${unit}`
-        );
-        const forecastData = await resForecast.json();
-
-        setWeather(data);
-        setForecast(forecastData.list);
-
-      } catch {
-        setError("Gagal mengambil lokasi");
-      }
-
-      setLoading(false);
-    });
   }
 
   function getBackgroundClass(weather) {
