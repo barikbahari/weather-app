@@ -484,3 +484,44 @@ button:hover {
   padding: 6px 10px;
   border-radius: 8px;
 }
+
+.aqi-container {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.aqi-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+  position: relative;
+
+  background: linear-gradient(
+    to right,
+    #22c55e 0%,
+    #84cc16 25%,
+    #eab308 50%,
+    #f97316 75%,
+    #ef4444 100%
+  );
+}
+
+.aqi-desc {
+  margin-top: 8px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.aqi-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(255,255,255,0.6);
+}

@@ -8,6 +8,7 @@ export default function useWeather() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [unit, setUnit] = useState("metric");
+  const [aqi, setAqi] = useState(null);
 
   // load unit dari localStorage
   useEffect(() => {
@@ -37,13 +38,23 @@ export default function useWeather() {
       );
       const forecastData = await resForecast.json();
 
+      const { coord } = data;
+
+      const resAqi = await fetch(
+        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${coord.lat}&lon=${coord.lon}&appid=${API_KEY}`
+      );
+
+      const aqiData = await resAqi.json();
+
       if (data.cod === "404") {
         setError("Kota tidak ditemukan");
         setWeather(null);
         setForecast([]);
+        setAqi(null);
       } else {
         setWeather(data);
         setForecast(forecastData.list);
+        setAqi(aqiData?.list?.[0] || null);
       }
     } catch {
       setError("Terjadi error");
@@ -70,8 +81,15 @@ export default function useWeather() {
         );
         const forecastData = await resForecast.json();
 
+        const resAqi = await fetch(
+          `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
+        );
+
+        const aqiData = await resAqi.json();
+        
         setWeather(data);
         setForecast(forecastData.list);
+        setAqi(aqiData?.list?.[0] || null);
       } catch {
         setError("Gagal mengambil lokasi");
       }
@@ -93,6 +111,7 @@ export default function useWeather() {
     loading,
     error,
     unit,
+    aqi,
     setUnit,
     fetchWeather,
     detectLocation,

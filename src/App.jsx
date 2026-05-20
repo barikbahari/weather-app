@@ -19,6 +19,7 @@ export default function App() {
     loading,
     error,
     unit,
+    aqi,
     setUnit,
     fetchWeather,
     detectLocation
@@ -236,6 +237,7 @@ export default function App() {
             isFav={favorites.includes(weather.name)}
             onToggleFav={() => toggleFavorite(weather.name)}
             unit={unit}
+            aqi={aqi}
           />
         </div>
       )}
